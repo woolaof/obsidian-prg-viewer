@@ -226,18 +226,11 @@ export default class PrgViewerPlugin extends Plugin implements PrgFileViewHost {
           : error instanceof Error
             ? error.message
             : String(error);
-    const box = document.createElement("div");
-    box.className = "prg-viewer__error";
-    const heading = document.createElement("strong");
-    heading.textContent = "无法打开 PRG 文件";
-    const detail = document.createElement("p");
-    detail.textContent = message;
-    box.append(heading, detail);
+    const box = el.createEl("div", { cls: "prg-viewer__error" });
+    box.createEl("strong", { text: "无法打开 PRG 文件" });
+    box.createEl("p", { text: message });
     if (filePath) {
-      const path = document.createElement("code");
-      path.textContent = filePath;
-      box.append(path);
+      box.createEl("code", { text: filePath });
     }
-    el.append(box);
   }
 }

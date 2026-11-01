@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.3
+
+- 使用 Obsidian 的 `createEl` 创建界面元素，兼容弹出窗口。
+- 清理归档解析中的 `any` 类型警告、未使用导入和 CSS `!important`。
+- 发布工作流只上传 `main.js`、`manifest.json`、`styles.css`，并生成构建来源证明。
+
 ## 0.1.2
 
 - 修正 `minAppVersion`：此前误写为 1.5.0，实际只在 Obsidian 1.14.5 上验证过。

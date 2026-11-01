@@ -34,7 +34,21 @@ class FakeElement {
   }
 
   append(...nodes: FakeElement[]): void {
-    this.children.push(...nodes);
+    for (const node of nodes) {
+      const index = this.children.indexOf(node);
+      if (index >= 0) {
+        this.children.splice(index, 1);
+      }
+      this.children.push(node);
+    }
+  }
+
+  createEl(tagName: string, options?: { cls?: string; text?: string }): FakeElement {
+    const child = new FakeElement(tagName, this.ownerDocument);
+    child.className = options?.cls ?? "";
+    child.textContent = options?.text ?? "";
+    this.children.push(child);
+    return child;
   }
 
   setAttribute(name: string, value: string): void {

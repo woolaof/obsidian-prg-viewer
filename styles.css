@@ -131,7 +131,6 @@
 
 .prg-viewer--fill .prg-viewer__stage {
   flex: 1 1 auto;
-  height: auto !important;
   min-height: 0;
 }
 

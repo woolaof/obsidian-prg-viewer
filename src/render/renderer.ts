@@ -25,7 +25,6 @@ import {
   multiply,
   normalize,
   pointOnArcAt,
-  rectArea,
   rectCenter,
   rectExpand,
   rectInner,

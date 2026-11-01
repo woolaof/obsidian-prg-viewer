@@ -104,6 +104,15 @@ function makeElement() {
     children: typeof children;
     replaceChildren(): void;
     append(...nodes: Array<{ tagName?: string; textContent?: string; className?: string }>): void;
+    createEl(
+      tagName: string,
+      options?: { cls?: string; text?: string },
+    ): {
+      tagName: string;
+      textContent: string;
+      className: string;
+      createEl: (childTag: string, childOptions?: { cls?: string; text?: string }) => unknown;
+    };
   } = {
     children,
     replaceChildren(): void {
@@ -117,6 +126,25 @@ function makeElement() {
           className: node.className ?? "",
         });
       }
+    },
+    createEl(tagName, options) {
+      const makeChild = (
+        childTag: string,
+        childOptions?: { cls?: string; text?: string },
+      ): {
+        tagName: string;
+        textContent: string;
+        className: string;
+        createEl: (nestedTag: string, nestedOptions?: { cls?: string; text?: string }) => unknown;
+      } => ({
+        tagName: childTag,
+        textContent: childOptions?.text ?? "",
+        className: childOptions?.cls ?? "",
+        createEl: makeChild,
+      });
+      const child = makeChild(tagName, options);
+      children.push({ tag: tagName.toLowerCase(), text: child.textContent, className: child.className });
+      return child;
     },
   };
   return el;

@@ -29,7 +29,7 @@ Read-only viewer for Project Graph `.prg` files. Unofficial, not affiliated with
 
 ## 安装
 
-从 Releases 下载 `prg-viewer-0.1.2.zip`，解压到库的插件目录：
+从 Releases 下载 `main.js`、`manifest.json` 和 `styles.css`，放入库的插件目录：
 
 ```text
 <vault>/.obsidian/plugins/prg-viewer/

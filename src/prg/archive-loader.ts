@@ -22,12 +22,17 @@ const REQUIRED_ENTRIES = new Set([
 
 function decodeMsgpack(bytes: Uint8Array, label: string): unknown {
   try {
-    return decode(bytes);
+    const value: unknown = decode(bytes);
+    return value;
   } catch (error) {
     throw new PrgParseError("INVALID_MSGPACK", `${label} 不是有效的 MessagePack 数据`, {
       cause: error,
     });
   }
+}
+
+function isStringArray(value: unknown): value is string[] {
+  return Array.isArray(value) && value.every((entry): entry is string => typeof entry === "string");
 }
 
 function readMetadata(value: unknown): PrgMetadata {
@@ -41,7 +46,7 @@ function readTags(value: unknown): string[] {
   if (value === undefined) {
     return [];
   }
-  if (!Array.isArray(value) || value.some((tag) => typeof tag !== "string")) {
+  if (!isStringArray(value)) {
     throw new PrgParseError("INVALID_TAGS", "tags.msgpack 必须是字符串数组");
   }
   return value;
@@ -51,20 +56,18 @@ function readReferences(value: unknown): PrgReferences {
   if (value === undefined) {
     return { sections: {}, files: [] };
   }
-  if (!isRecord(value) || !isRecord(value.sections) || !Array.isArray(value.files)) {
+  if (!isRecord(value) || !isRecord(value.sections) || !isStringArray(value.files)) {
     throw new PrgParseError("INVALID_REFERENCE", "reference.msgpack 结构无效");
   }
+  const files = value.files;
   const sections: Record<string, string[]> = {};
   for (const [key, refs] of Object.entries(value.sections)) {
-    if (!Array.isArray(refs) || refs.some((ref) => typeof ref !== "string")) {
+    if (!isStringArray(refs)) {
       throw new PrgParseError("INVALID_REFERENCE", `reference.msgpack 的 sections.${key} 不是字符串数组`);
     }
     sections[key] = refs;
   }
-  if (value.files.some((file) => typeof file !== "string")) {
-    throw new PrgParseError("INVALID_REFERENCE", "reference.msgpack 的 files 不是字符串数组");
-  }
-  return { sections, files: value.files };
+  return { sections, files };
 }
 
 /**

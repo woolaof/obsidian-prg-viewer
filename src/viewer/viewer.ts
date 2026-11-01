@@ -46,21 +46,24 @@ export class PrgViewer {
     this.height = this.fill ? 0 : (options.height ?? 520);
     this.theme = themeForDark(options.dark ?? false);
 
-    const document = container.ownerDocument;
-    this.root = document.createElement("div");
-    this.root.className = this.fill ? "prg-viewer prg-viewer--fill" : "prg-viewer";
+    this.root = container.createEl("div", {
+      cls: this.fill ? "prg-viewer prg-viewer--fill" : "prg-viewer",
+    });
 
-    const actions = document.createElement("div");
-    actions.className = "prg-viewer__actions";
+    this.stage = this.root.createEl("div", { cls: "prg-viewer__stage" });
+    this.stage.style.height = this.fill ? "100%" : `${this.height}px`;
+
+    this.canvas = this.stage.createEl("canvas", { cls: "prg-viewer__canvas" });
+    this.canvas.tabIndex = 0;
+
+    const actions = this.stage.createEl("div", { cls: "prg-viewer__actions" });
     actions.setAttribute("role", "toolbar");
     actions.setAttribute("aria-label", "预览控制");
 
-    const zoomOut = this.createButton(document, "−", "缩小");
-    const zoomIn = this.createButton(document, "+", "放大");
-    const fit = this.createButton(document, "适应", "适应窗口");
-    this.zoomLabel = document.createElement("span");
-    this.zoomLabel.className = "prg-viewer__zoom";
-    this.zoomLabel.textContent = "100%";
+    const zoomOut = this.createButton(actions, "−", "缩小");
+    const zoomIn = this.createButton(actions, "+", "放大");
+    const fit = this.createButton(actions, "适应", "适应窗口");
+    this.zoomLabel = actions.createEl("span", { cls: "prg-viewer__zoom", text: "100%" });
 
     zoomOut.addEventListener("click", () => this.zoom(1 / 1.25));
     zoomIn.addEventListener("click", () => this.zoom(1.25));
@@ -70,24 +73,11 @@ export class PrgViewer {
     actions.append(zoomOut, this.zoomLabel, zoomIn, fit);
 
     if (options.collapsible) {
-      this.collapseButton = this.createButton(document, "收起", "收起预览");
+      this.collapseButton = this.createButton(this.stage, "收起", "收起预览");
       this.collapseButton.classList.add("prg-viewer__collapse");
       this.collapseButton.setAttribute("aria-expanded", "true");
       this.collapseButton.addEventListener("click", () => this.toggleCollapsed());
     }
-
-    this.stage = document.createElement("div");
-    this.stage.className = "prg-viewer__stage";
-    this.stage.style.height = this.fill ? "100%" : `${this.height}px`;
-
-    this.canvas = document.createElement("canvas");
-    this.canvas.className = "prg-viewer__canvas";
-    this.canvas.tabIndex = 0;
-    this.stage.append(this.canvas, actions);
-    if (this.collapseButton) {
-      this.stage.append(this.collapseButton);
-    }
-    this.root.append(this.stage);
 
     this.canvas.addEventListener("wheel", this.onWheel, { passive: false });
     this.canvas.addEventListener("pointerdown", this.onPointerDown);
@@ -96,8 +86,6 @@ export class PrgViewer {
     this.canvas.addEventListener("pointercancel", this.onPointerUp);
     this.canvas.addEventListener("dblclick", this.onDoubleClick);
     this.canvas.addEventListener("keydown", this.onKeyDown);
-
-    container.append(this.root);
 
     if (typeof ResizeObserver !== "undefined") {
       this.resizeObserver = new ResizeObserver(() => this.resize());
@@ -165,7 +153,7 @@ export class PrgViewer {
   destroy(): void {
     this.destroyed = true;
     if (this.frame !== 0) {
-      cancelAnimationFrame(this.frame);
+      this.cancelFrame(this.frame);
       this.frame = 0;
     }
     this.resizeObserver?.disconnect();
@@ -181,13 +169,12 @@ export class PrgViewer {
   }
 
   private createButton(
-    document: Document,
+    parent: HTMLElement,
     label: string,
     ariaLabel: string,
   ): HTMLButtonElement {
-    const button = document.createElement("button");
+    const button = parent.createEl("button", { cls: "prg-viewer__button" });
     button.type = "button";
-    button.className = "prg-viewer__button";
     button.textContent = label;
     button.setAttribute("aria-label", ariaLabel);
     return button;
@@ -219,10 +206,32 @@ export class PrgViewer {
     if (this.destroyed || this.frame !== 0) {
       return;
     }
-    this.frame = requestAnimationFrame(() => {
+    this.frame = this.requestFrame(() => {
       this.frame = 0;
       this.draw();
     });
+  }
+
+  private requestFrame(callback: FrameRequestCallback): number {
+    const win = this.ownerWindow();
+    if (win && typeof win.requestAnimationFrame === "function") {
+      return win.requestAnimationFrame(callback);
+    }
+    if (typeof window !== "undefined" && typeof window.requestAnimationFrame === "function") {
+      return window.requestAnimationFrame(callback);
+    }
+    return 0;
+  }
+
+  private cancelFrame(frame: number): void {
+    const win = this.ownerWindow();
+    if (win && typeof win.cancelAnimationFrame === "function") {
+      win.cancelAnimationFrame(frame);
+      return;
+    }
+    if (typeof window !== "undefined" && typeof window.cancelAnimationFrame === "function") {
+      window.cancelAnimationFrame(frame);
+    }
   }
 
   private draw(): void {
