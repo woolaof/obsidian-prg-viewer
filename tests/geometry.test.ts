@@ -123,6 +123,10 @@ describe("curve regression", () => {
     expect(lineEdgeBending({ x: 0, y: 0 }, { x: 80, y: 400 })).toBe(50);
   });
 
+  it("scales the minimum bending with a wider edge", () => {
+    expect(lineEdgeBending({ x: 0, y: 0 }, { x: 1000, y: 400 }, 16)).toBe(400);
+  });
+
   it("clips an almost straight arc to the near end, not the opposite side", () => {
     const arc = arcThroughPoints({ x: 0, y: 0 }, { x: 100, y: 0 }, { x: 50, y: 0.5 });
     const start = clipArcToRect(arc, { x: -5, y: -5, width: 10, height: 10 }, "start");

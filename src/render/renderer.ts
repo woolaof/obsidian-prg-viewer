@@ -600,13 +600,22 @@ function objectRect(scene: Scene, uuid: string): ObjectRect | null {
   return { object, rect: object.bounds, center: rectCenter(object.bounds) };
 }
 
-function edgeWidth(scene: Scene, edge: SceneEdge): number {
+function textNodeBorderWidth(node: SceneTextNode): number {
+  const rawFontSize = FONT_SIZE * 2 ** (node.fontScaleLevel / 2);
+  const fontSize = rawFontSize >= 2 ? Math.floor(rawFontSize) : rawFontSize;
+  return (fontSize / FONT_SIZE) * 2;
+}
+
+export function edgeWidth(scene: Scene, edge: SceneEdge): number {
   const source = scene.byUuid.get(edge.sourceUuid);
   const target = scene.byUuid.get(edge.targetUuid);
   if (source?.kind === "Section" && target?.kind === "Section" && source.bounds && target.bounds) {
     const sourceMax = Math.max(source.bounds.width, source.bounds.height);
     const targetMax = Math.max(target.bounds.width, target.bounds.height);
     return Math.min(Math.min(sourceMax, targetMax) / 100, 100);
+  }
+  if (source?.kind === "TextNode") {
+    return textNodeBorderWidth(source);
   }
   return 2;
 }
@@ -717,7 +726,7 @@ function drawLineEdge(
     startDirection,
     endDirection,
     arrowSizeWorld,
-    lineEdgeBending(startWorld, endWorld),
+    lineEdgeBending(startWorld, endWorld, widthWorld),
   );
   drawCurve(ctx, curve, camera, color, width, edge.lineType === "dashed");
 

@@ -359,11 +359,11 @@ export function cubicPoint(curve: CubicCurve, t: number): Point {
 }
 
 /**
- * 2.7-era 导出使用的弯折量：至少 50，斜向长边取较短轴跨度的一半。
- * 参考 SVG 的控制柄长度与此公式一致。
+ * 4.2.3 的弯折量：至少为线宽的 25 倍，斜向长边取较短轴跨度的一半。
+ * 线宽为 2 时与参考 SVG 的 50 一致。
  */
-export function lineEdgeBending(start: Point, end: Point): number {
-  return Math.max(50, Math.min(Math.abs(start.x - end.x), Math.abs(start.y - end.y)) / 2);
+export function lineEdgeBending(start: Point, end: Point, width = 2): number {
+  return Math.max(width * 25, Math.min(Math.abs(start.x - end.x), Math.abs(start.y - end.y)) / 2);
 }
 
 export function symmetryCurve(
