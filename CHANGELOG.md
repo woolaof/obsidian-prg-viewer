@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- 源节点为文本节点时按节点边框宽度绘制连线与箭头，修复缩小时线宽过细。
+
 ## 0.1.0
 
 - 只读打开 Project Graph 2.7.0 的 `.prg` 文件。
