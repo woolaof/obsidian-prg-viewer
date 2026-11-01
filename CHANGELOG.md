@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.1.4
 
 - 左侧 Ribbon 增加“插入 PRG 预览”按钮，在没有打开 Markdown 笔记时给出提示。
 
