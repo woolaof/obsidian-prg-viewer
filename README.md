@@ -1,5 +1,7 @@
 # PRG Viewer
 
+**本插件所有内容全部由AI制作，无人工审查**
+
 在 Obsidian 中只读查看 Project Graph `.prg` 文件。非官方插件，与 Project Graph 作者无关联。
 
 Read-only viewer for Project Graph `.prg` files. Unofficial, not affiliated with Project Graph.
