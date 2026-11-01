@@ -5,6 +5,10 @@
   "type": "module",
   "license": "MIT",
   "author": "woolaof",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/woolaof/obsidian-prg-viewer.git"
+  },
   "scripts": {
     "inspect": "tsx scripts/inspect-prg.ts",
     "test": "vitest run",
