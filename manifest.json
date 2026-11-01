@@ -1,8 +1,8 @@
 {
   "id": "prg-viewer",
   "name": "PRG Viewer",
-  "version": "0.1.1",
-  "minAppVersion": "1.5.0",
+  "version": "0.1.2",
+  "minAppVersion": "1.14.5",
   "description": "Read-only viewer for Project Graph .prg files.",
   "author": "woolaof",
   "isDesktopOnly": true
