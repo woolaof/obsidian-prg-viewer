@@ -8,6 +8,16 @@ Read-only viewer for Project Graph `.prg` files. Unofficial, not affiliated with
 
 支持 `metadata.version` 为 `2.7.0` 的文件，读取 ZIP 内的 MessagePack 数据并用 Canvas 2D 绘制。插件不写回原文件，不执行文件里的脚本，不联网。
 
+## 演示
+
+打开 `.prg` 是一个独立的只读预览标签页，滚轮缩放、拖动平移、适应窗口都可以用：
+
+<img width="760" src="assets/preview.webp" alt="打开 .prg 文件并在预览里缩放查看">
+
+在笔记里插入预览：光标停在 Markdown 笔记中，点左侧 Ribbon 的「插入 PRG 预览」，选一个 `.prg`，预览代码块会插到光标处：
+
+<img width="760" src="assets/insert.webp" alt="在 Markdown 笔记里插入 PRG 预览代码块">
+
 ## 功能
 
 - 在文件列表直接打开 `.prg`，显示为独立预览标签页。
