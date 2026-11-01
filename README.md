@@ -11,7 +11,7 @@ Read-only viewer for Project Graph `.prg` files. Unofficial, not affiliated with
 ## 功能
 
 - 在文件列表直接打开 `.prg`，显示为独立预览标签页。
-- 左侧 Ribbon、命令面板和文件右键菜单都可以打开预览。
+- 左侧 Ribbon 有一个预览按钮和一个“插入 PRG 预览”按钮，命令面板和文件右键菜单也能打开预览。
 - 笔记内使用 `prg-viewer` 代码块嵌入，路径相对当前笔记解析。
 - 嵌入的预览可以收起为 40px 高的条，再展开恢复原高度和视角。
 - 支持 Fit、滚轮缩放、拖拽平移、双击 Fit、键盘 `+` `-` `0`。

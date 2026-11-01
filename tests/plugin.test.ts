@@ -204,7 +204,7 @@ describe("Obsidian code block", () => {
     expect(mocks.extensions).toEqual(["prg"]);
     expect(mocks.commands).toContain("open-preview");
     expect(mocks.commands).toContain("insert-preview");
-    expect(mocks.ribbonTitles).toContain("PRG 预览");
+    expect(mocks.ribbonTitles).toEqual(["PRG 预览", "插入 PRG 预览"]);
   });
 
   it("resolves a relative path, reads it, and mounts a viewer", async () => {

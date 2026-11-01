@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- 左侧 Ribbon 增加“插入 PRG 预览”按钮，在没有打开 Markdown 笔记时给出提示。
+
 ## 0.1.3
 
 - 使用 Obsidian 的 `createEl` 创建界面元素，兼容弹出窗口。

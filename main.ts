@@ -1,6 +1,7 @@
 import {
   addIcon,
   MarkdownRenderChild,
+  MarkdownView,
   Notice,
   Plugin,
   TFile,
@@ -53,6 +54,9 @@ export default class PrgViewerPlugin extends Plugin implements PrgFileViewHost {
     addIcon(PRG_RIBBON_ICON, PRG_RIBBON_SVG);
     this.addRibbonIcon(PRG_RIBBON_ICON, "PRG 预览", () => {
       this.openPicker();
+    });
+    this.addRibbonIcon("plus", "插入 PRG 预览", () => {
+      this.insertPreviewFromActiveNote();
     });
     this.addCommand({
       id: "open-preview",
@@ -190,6 +194,18 @@ export default class PrgViewerPlugin extends Plugin implements PrgFileViewHost {
   private openPicker(): void {
     new PrgFilePicker(this.app, (file) => {
       void this.openPrgFile(file);
+    }).open();
+  }
+
+  private insertPreviewFromActiveNote(): void {
+    const view = this.app.workspace.getActiveViewOfType(MarkdownView);
+    const sourceFile = view?.file;
+    if (!view || !sourceFile) {
+      new Notice("请先打开一个 Markdown 笔记");
+      return;
+    }
+    new PrgFilePicker(this.app, (file) => {
+      this.insertPreview(view.editor, sourceFile, file);
     }).open();
   }
 
